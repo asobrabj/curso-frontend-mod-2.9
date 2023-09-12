@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+
 const Forme = () => {
   const [formData, setFormData] = useState({
     nome: "",
@@ -16,6 +17,47 @@ const Forme = () => {
   const [submittedData, setSubmittedData] = useState(null);
   const [itemList, setItemList] = useState([]);
   const [sortOrder, setSortOrder] = useState("asc");
+
+  const toggleSortOrder = () => {
+    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+  };
+const sortedList = [...itemList].sort((a, b) => {
+    if (sortOrder === "asc") {
+      return a.nome.localeCompare(b.nome);
+    } else {
+      return b.nome.localeCompare(a.nome);
+    }
+  });
+  
+
+  const openPopup = (item) => {
+    const popup = window.open(
+      "",
+      "_blank",
+      "width=600,height=400,scrollbars=yes,resizable=yes"
+    );
+
+    popup.document.write(`
+      <html>
+        <head>
+          <title>Detalhes do Item</title>
+        </head>
+        <body>
+          <h2>Detalhes do Item</h2>
+          <p>Nome: ${item.nome}</p>
+          <p>Idade: ${item.idade}</p>
+          <p>Email: ${item.email}</p>
+          <p>Estado civil: ${item.estado}</p>
+          <p>Identidade: ${item.identidade}</p>
+          <p>CPF: ${item.cpf}</p>
+          <p>Gênero: ${item.genero}</p>
+          <button onclick="window.close()">Fechar</button>
+        </body>
+      </html>
+    `);
+
+    popup.document.close();
+  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -73,17 +115,8 @@ const Forme = () => {
   };
 
 
-  const toggleSortOrder = () => {
-    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
-  };
   
-  const sortedList = [...itemList].sort((a, b) => {
-    if (sortOrder === "asc") {
-      return a.nome.localeCompare(b.nome);
-    } else {
-      return b.nome.localeCompare(a.nome);
-    }
-  });
+
 
   return (
     <div className="container">
@@ -193,9 +226,13 @@ const Forme = () => {
     {/* Renderize a lista na lateral */}
     <div className="container_list">
       <h3>Lista de Itens</h3>
+      <button onClick={toggleSortOrder}>
+          Ordenar {sortOrder === "asc" ? "crescente" : "decrescente"}
+        </button>
       <ul>
         {sortedList.map((item, index) => (
           <li key={index}>
+            <button onClick={() => openPopup(item)}>Detalhes</button>
             <p>Nome: {item.nome} - Idade: {item.idade}</p> 
             <p>Email:{item.email}</p>
             <p>Estado civil: {item.estado}</p>
@@ -209,8 +246,10 @@ const Forme = () => {
         ))}
       </ul>
     </div>
+    
   </div>
   );
 };
 
 export default Forme;
+

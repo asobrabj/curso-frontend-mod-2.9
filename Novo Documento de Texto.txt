@@ -1,0 +1,1 @@
+Organização: adicionar um botão que possamos organizar a lista, de maneira crescente ou decrescente, usado a ordem de adição na lista. Note que, se a lista estiver com a ordem do mais novo ao mais antigo e formos adicionar um novo valor, esse valor novo deve ser adicionado no tempo, e vice-versa.
