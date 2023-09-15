@@ -1,7 +1,5 @@
-import React, { useState } from 'react';
-import Modal from 'react-modal'; 
-import './styles.css';
-Modal.setAppElement('#root');
+import React, { useState } from "react";
+
 
 const Forme = () => {
   const [formData, setFormData] = useState({
@@ -14,33 +12,52 @@ const Forme = () => {
     genero: "",
   });
 
+  
   const [errors, setErrors] = useState({});
   const [submittedData, setSubmittedData] = useState(null);
   const [itemList, setItemList] = useState([]);
-  const [sortOrder, setSortOrder] = useState('asc');
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [modalItem, setModalItem] = useState(null);
+  const [sortOrder, setSortOrder] = useState("asc");
 
   const toggleSortOrder = () => {
-    setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
   };
-
-  const openModal = (item) => {
-    setModalItem(item);
-    setModalIsOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalIsOpen(false);
-  };
-
-  const sortedList = [...itemList].sort((a, b) => {
-    if (sortOrder === 'asc') {
+const sortedList = [...itemList].sort((a, b) => {
+    if (sortOrder === "asc") {
       return a.nome.localeCompare(b.nome);
     } else {
       return b.nome.localeCompare(a.nome);
     }
   });
+  
+
+  const openPopup = (item) => {
+    const popup = window.open(
+      "",
+      "_blank",
+      "width=600,height=400,scrollbars=yes,resizable=yes"
+    );
+
+    popup.document.write(`
+      <html>
+        <head>
+          <title>Detalhes do Item</title>
+        </head>
+        <body>
+          <h2>Detalhes do Item</h2>
+          <p>Nome: ${item.nome}</p>
+          <p>Idade: ${item.idade}</p>
+          <p>Email: ${item.email}</p>
+          <p>Estado civil: ${item.estado}</p>
+          <p>Identidade: ${item.identidade}</p>
+          <p>CPF: ${item.cpf}</p>
+          <p>Gênero: ${item.genero}</p>
+          <button onclick="window.close()">Fechar</button>
+        </body>
+      </html>
+    `);
+
+    popup.document.close();
+  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -50,7 +67,7 @@ const Forme = () => {
     }));
   };
 
-   const handleSubmit = (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
 
     const newErrors = {};
@@ -96,6 +113,9 @@ const Forme = () => {
     updatedList.splice(index, 1);
     setItemList(updatedList);
   };
+
+
+  
 
 
   return (
@@ -201,19 +221,18 @@ const Forme = () => {
           <button type="submit">Enviar</button>
         </form>
       </div>
-      
-
-      <div className="container_list">
-        <h3>Lista de Itens</h3>
-
-        <button onClick={toggleSortOrder}>
-          Ordenar {sortOrder === 'asc' ? 'crescente' : 'decrescente'}
+    
+    
+    {/* Renderize a lista na lateral */}
+    <div className="container_list">
+      <h3>Lista de Itens</h3>
+      <button onClick={toggleSortOrder}>
+          Ordenar {sortOrder === "asc" ? "crescente" : "decrescente"}
         </button>
-
-        <ul>
-          {sortedList.map((item, index) => (
-            <li key={index}>
-            <button onClick={() => openModal(item)}>Detalhes</button>
+      <ul>
+        {sortedList.map((item, index) => (
+          <li key={index}>
+            <button onClick={() => openPopup(item)}>Detalhes</button>
             <p>Nome: {item.nome} - Idade: {item.idade}</p> 
             <p>Email:{item.email}</p>
             <p>Estado civil: {item.estado}</p>
@@ -224,37 +243,13 @@ const Forme = () => {
             </p>
             <p>{"........."}</p>
           </li>
-          ))}
-        </ul>
-      </div>
-  
-  
-    <Modal
-    isOpen={modalIsOpen}
-    onRequestClose={closeModal}
-    overlayClassName="modal-full-screen"
-    className="modal-content"
-    >
-     <button className="modal-close-button" onClick={closeModal}>
-          Fechar
-      </button>
-
-      <h2>Detalhes do Item</h2>
-      {modalItem && (
-        <div>
-          <p>Nome: {modalItem.nome}</p>
-          <p>Idade: {modalItem.idade}</p>
-          <p>Email: {modalItem.email}</p>
-          <p>Estado civil: {modalItem.estado}</p>
-          <p>Identidade: {modalItem.identidade}</p>
-          <p>CPF: {modalItem.cpf}</p>
-          <p>Gênero: {modalItem.genero}</p>
-          <button onClick={closeModal}>Fechar</button>
-        </div>
-      )}
-    </Modal>
+        ))}
+      </ul>
     </div>
+    
+  </div>
   );
 };
 
 export default Forme;
+
